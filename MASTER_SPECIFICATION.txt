@@ -1,0 +1,2052 @@
+# PROJECT: STRANDED — AI-Powered Space Survival & Exploration
+
+## MASTER DEVELOPMENT PROMPT
+
+Build a complete, professional, single-player, open-world **3D space survival, exploration, crafting, and base-building game** using Three.js, DeepSeek API, and IndexedDB.
+
+The player is an astronaut stranded in an unfamiliar region of space after a catastrophic spacecraft malfunction.
+
+They must survive by exploring planets, gathering resources, repairing their ship, upgrading equipment, building permanent settlements, constructing orbital space stations, and traveling deeper into an enormous procedurally generated universe.
+
+The game should combine the exploration and discovery of No Man's Sky, survival and base construction similar to Subnautica, spacecraft management similar to Space Engineers, and an evolving AI-generated universe.
+
+**The key distinction:** DeepSeek should dynamically create the universe's content, discoveries, stories, missions, civilizations, and encounters. The actual simulation, physics, combat, inventory, resource transactions, and player controls must run locally through deterministic JavaScript systems.
+
+The result must be a real playable game, not a 3D scene viewer or text-based adventure.
+
+---
+
+# 1. Core Requirements
+
+The game must include:
+
+1. A fully controllable astronaut.
+2. Third-person and first-person camera modes.
+3. An explorable three-dimensional universe.
+4. Procedurally generated planets with unique terrain, ecosystems, and resources.
+5. Spacecraft piloting and landing.
+6. Planet-to-planet and star-system travel.
+7. Oxygen, health, food, water, temperature, fuel, and energy survival systems.
+8. Resource mining, gathering, salvage, and processing.
+9. Detailed inventory and crafting systems.
+10. Spacecraft damage, repairs, and upgrades.
+11. Space station repair, expansion, and construction.
+12. Planetary bases, habitats, colonies, and resource outposts.
+13. Single-player PvE combat against hostile creatures, drones, pirates, and environmental threats.
+14. AI-generated missions, discoveries, encounters, and storylines.
+15. Alien civilizations, ancient ruins, abandoned facilities, and derelict spacecraft.
+16. Research and technology progression.
+17. Persistent worlds and player progression saved to IndexedDB.
+18. Dynamic DeepSeek-driven world events.
+19. Background generation of upcoming planets and destinations.
+20. A polished, responsive game UI with minimal unnecessary settings.
+
+The game must continue functioning when the DeepSeek API is unavailable, using already-generated content and locally implemented gameplay systems.
+
+---
+
+# 2. Technology and Deployment
+
+Build the game primarily as **one self-contained HTML file**, with CSS and JavaScript included.
+
+Use:
+
+- Three.js loaded from cdnjs.
+- JavaScript ES modules where needed.
+- WebGL rendering.
+- WebGPU enhancements only when compatible and stable.
+- DeepSeek API for AI-driven game content.
+- IndexedDB for persistent game data.
+- OPFS where useful for larger asset or world caches.
+- Web Audio API for generated ambient and interactive audio.
+- Web Workers for expensive procedural generation.
+- Local procedural generation for planets and structures.
+
+No React, npm installation, Python, or mandatory game server.
+
+The game should be deployable to GitHub Pages and playable in Chrome on an 8 GB Chromebook.
+
+If browser security restrictions prevent some features from working directly through `file://`, use GitHub Pages as the supported deployment method.
+
+Do not claim the application works completely offline when DeepSeek or uncached external dependencies are required. Existing downloaded game content should remain playable without repeated API calls.
+
+---
+
+# 3. Game Introduction and Starting Scenario
+
+The game begins with a dramatic but playable introduction.
+
+The astronaut awakens inside a severely damaged spacecraft drifting near an unfamiliar planet.
+
+The emergency systems report:
+
+- Main propulsion damaged.
+- Hyperspace drive offline.
+- Life support functioning at reduced capacity.
+- Oxygen reserves limited.
+- Communications unavailable.
+- Ship navigation database corrupted.
+- Nearby space station transmitting a weak emergency beacon.
+
+The player must begin making decisions immediately.
+
+Their first objectives are:
+
+1. Investigate the damaged ship.
+2. Restore basic electrical power.
+3. Repair the emergency oxygen system.
+4. Scan the nearby planet.
+5. Gather usable materials from the ship.
+6. Land on the planet or use a small emergency shuttle.
+7. Recover resources needed to repair propulsion.
+8. Repair the ship sufficiently to reach an abandoned space station.
+9. Restore the station's basic functionality.
+10. Begin exploring surrounding planets.
+
+The introductory sequence must teach the actual gameplay systems without relying on long text tutorials.
+
+Use interactive objectives, highlighted equipment, short instructions, and optional contextual guidance.
+
+Once the basic ship and station are operational, the player gains freedom to determine their own goals.
+
+Do not force the player to follow one linear mission sequence forever.
+
+---
+
+# 4. DeepSeek — Dynamic Universe Director
+
+DeepSeek is the intelligence responsible for generating and evolving the universe.
+
+It should function as a persistent **AI Game Director**.
+
+Its responsibilities include generating:
+
+- Star systems.
+- Planet identities.
+- Biome descriptions and environmental parameters.
+- Resource distributions.
+- Alien ecosystems.
+- Creature descriptions and behavior profiles.
+- Civilizations and factions.
+- Ancient ruins.
+- Abandoned spacecraft.
+- Space stations.
+- Research discoveries.
+- Missions and side quests.
+- Distress signals.
+- Dynamic encounters.
+- Environmental events.
+- Narrative discoveries.
+- Unique equipment and upgrades.
+- Alien artifacts.
+- Long-term storylines.
+
+DeepSeek should consider the player's history before generating new content.
+
+For example:
+
+If the player has repeatedly explored volcanic planets, DeepSeek might generate a mission involving heat-resistant technology, a rare mineral deposit, or an ancient mining civilization.
+
+If the player has constructed several settlements, DeepSeek might introduce new trade opportunities, logistical problems, or construction objectives.
+
+If the player has engaged hostile pirates, the AI might create additional pirate-related encounters or a mission involving their abandoned outpost.
+
+## Critical Game Director Rules
+
+DeepSeek must never directly control the authoritative game state.
+
+The local game engine is responsible for:
+- Inventory quantities.
+- Health and oxygen consumption.
+- Fuel calculations.
+- Crafting costs.
+- Combat damage.
+- Ship durability.
+- Resource ownership.
+- Construction requirements.
+- Movement and physics.
+- Mission completion validation.
+
+DeepSeek generates proposals, definitions, and event descriptions using structured JSON.
+
+The game engine validates those outputs before applying them.
+
+Do not allow AI responses to duplicate inventory items, invent completed objectives, bypass resource requirements, or overwrite established universe history.
+
+The game must not require an API request for every movement, attack, crafting action, or resource collection.
+
+---
+
+# 5. Universe and Galaxy Generation
+
+Create a procedurally generated galaxy containing numerous star systems.
+
+The universe should feel vast and discoverable.
+
+Use a deterministic seeded generator so locations remain consistent across sessions.
+
+Each star system should have:
+- Unique system ID.
+- Star name.
+- Star classification.
+- Star color.
+- Multiple orbital bodies.
+- Asteroid belts.
+- Space hazards.
+- Possible space stations.
+- Resource opportunities.
+- Exploration difficulty.
+- Discovery status.
+- Faction presence where applicable.
+
+The player should have access to an interactive 3D galaxy map.
+
+Allow zooming between:
+- Galaxy map.
+- Star system map.
+- Planetary orbit view.
+- Planet surface view.
+
+Include markers for:
+- Previously discovered locations.
+- Space stations.
+- Player bases.
+- Unexplored planets.
+- Distress beacons.
+- Asteroid fields.
+- Trade hubs.
+- Mission locations.
+
+## Progressive Universe Generation
+
+Do not generate thousands of complete planets at startup.
+
+Generate lightweight star system metadata first.
+
+As the player approaches a system, prepare the relevant planets in the background.
+
+Generate detailed planetary terrain only when the player approaches or lands.
+
+Cache the results locally.
+
+Every discovered location must retain its identity and persistent changes.
+
+Revisiting a planet must restore the same world, including player-built structures and explored areas.
+
+---
+
+# 6. Planet Generation and Exploration
+
+Each planet should be a fully explorable procedural 3D environment.
+
+DeepSeek selects the high-level planetary characteristics.
+
+The local terrain generator constructs the geometry.
+
+Support planet types such as:
+
+- Rocky desert worlds.
+- Frozen ice planets.
+- Dense alien forests.
+- Tropical ocean planets.
+- Volcanic worlds.
+- Toxic wastelands.
+- Barren moons.
+- Crystal planets.
+- Mushroom forests.
+- Radioactive planets.
+- Mountainous worlds.
+- Dust storm planets.
+- Earth-like garden planets.
+- Underground cave worlds.
+- Low-gravity moons.
+- High-gravity super-Earths.
+
+Each planet must have distinct visual characteristics.
+
+## Terrain Systems
+
+Generate:
+- Mountains.
+- Hills.
+- Valleys.
+- Plains.
+- Canyons.
+- Craters.
+- Rivers and lakes where appropriate.
+- Caves and underground resource deposits.
+- Cliffs.
+- Large rock formations.
+- Vegetation.
+- Alien trees.
+- Environmental obstacles.
+
+Use seeded noise-based terrain and biome generation.
+
+Implement terrain chunking and level-of-detail so large worlds can be explored without keeping the entire planet in memory.
+
+The player should be able to walk across the terrain, not merely rotate a camera around a decorative planet.
+
+Ensure collision detection, surface grounding, slopes, gravity, and terrain interaction actually work.
+
+## Planetary Atmosphere
+
+Each planet has:
+- Gravity.
+- Atmospheric composition.
+- Temperature.
+- Radiation.
+- Weather.
+- Day/night cycle.
+- Oxygen availability.
+- Resource richness.
+- Environmental hazards.
+
+These characteristics affect gameplay.
+
+A frozen planet requires thermal protection.
+
+A toxic planet requires atmospheric filtration.
+
+A high-radiation planet requires shielding.
+
+A low-gravity moon allows higher jumping and different movement dynamics.
+
+## Discoveries
+
+Players can discover:
+- Unknown minerals.
+- Rare plants.
+- New creatures.
+- Ancient monuments.
+- Underground caves.
+- Abandoned settlements.
+- Crashed ships.
+- Alien machinery.
+- Hidden technology.
+- Underground laboratories.
+- Resource-rich geological formations.
+
+DeepSeek should give discoveries distinctive names and descriptions.
+
+Discoveries should provide meaningful gameplay value, not just collectible text.
+
+---
+
+# 7. Astronaut Movement and Controls
+
+The astronaut must be a functioning controllable 3D character.
+
+Support:
+
+**On foot**
+- WASD movement.
+- Mouse-look camera.
+- Sprint.
+- Jump.
+- Crouch.
+- Interact.
+- Pick up objects.
+- Equip tools.
+- Use weapons.
+- Mine resources.
+- Enter vehicles.
+- Enter structures.
+
+**Camera**
+- First person.
+- Third person.
+- Adjustable third-person zoom.
+- Smooth camera transitions.
+- Collision-aware camera positioning.
+
+**Zero Gravity**
+- Six-direction movement.
+- Thruster-based maneuvering.
+- EVA spacewalking.
+- Oxygen consumption.
+- Tether or emergency recovery mechanic.
+
+**Vehicles**
+- Ship piloting.
+- Ground rover driving.
+- Optional jetpack.
+- Landing and takeoff.
+
+Provide configurable keyboard controls and clear on-screen prompts.
+
+The character must have working animation, equipment attachments, and believable movement.
+
+Do not make movement a series of predefined animation buttons.
+
+---
+
+# 8. Survival Systems
+
+Survival should be challenging but enjoyable.
+
+Track these statistics:
+
+| Resource | Gameplay function |
+|---|---|
+| Health | Physical damage and injury |
+| Oxygen | Breathing and life support |
+| Food | Hunger and survival |
+| Water | Hydration |
+| Suit energy | Tools, lighting, and suit systems |
+| Temperature | Heat and cold exposure |
+| Radiation | Environmental exposure |
+| Stamina | Running and physical activity |
+| Fuel | Ship propulsion |
+| Ship power | Ship systems and equipment |
+| Ship hull | Spacecraft structural condition |
+
+Implement real consumption and recovery systems.
+
+Survival conditions must respond to the environment.
+
+For example:
+- Oxygen drains while outside a breathable atmosphere.
+- Harsh temperatures increase energy usage.
+- Radiation shielding reduces exposure.
+- Sprinting consumes stamina.
+- Ship equipment consumes stored power.
+- Fuel decreases during propulsion.
+- Food and water are consumed over time.
+
+Provide difficulty settings:
+- Relaxed Exploration.
+- Normal Survival.
+- Hard Survival.
+- Custom.
+
+Avoid excessive micromanagement.
+
+The player should be able to build automated systems that reduce survival chores as they progress.
+
+---
+
+# 9. Resource Collection and Mining
+
+Resources are fundamental to survival and progression.
+
+Include common materials such as:
+- Iron.
+- Copper.
+- Aluminum.
+- Titanium.
+- Silicon.
+- Carbon.
+- Sulfur.
+- Ice.
+- Water.
+- Oxygen.
+- Hydrogen.
+- Uranium.
+- Lithium.
+- Rare alien minerals.
+- Biological materials.
+
+DeepSeek can introduce new resources with unique characteristics.
+
+Every resource must have a consistent schema defining:
+- Name.
+- Resource ID.
+- Rarity.
+- Weight.
+- Stack size.
+- Extraction method.
+- Refining requirements.
+- Crafting uses.
+- Environmental distribution.
+
+## Gathering Tools
+
+Provide:
+- Hand mining laser.
+- Multi-tool.
+- Geological scanner.
+- Resource extractor.
+- Portable drill.
+- Automated mining equipment.
+- Salvage cutter.
+
+Mining should visually affect the world.
+
+For example, extracting a mineral deposit removes or depletes the deposit and transfers material to inventory.
+
+Do not display infinite resources without recording depletion.
+
+Resource deposits must have persistent quantities or documented renewable behavior.
+
+---
+
+# 10. Inventory, Storage, and Crafting
+
+Create a polished inventory system.
+
+Support:
+- Drag-and-drop item management.
+- Item stacking.
+- Equipment slots.
+- Item durability.
+- Storage capacity.
+- Weight or volume limits.
+- Ship cargo holds.
+- Base storage containers.
+- Station warehouses.
+- Resource sorting.
+- Item descriptions.
+- Crafting requirements.
+- Item comparison.
+
+Build a crafting system covering:
+- Survival equipment.
+- Oxygen supplies.
+- Food processing.
+- Repair materials.
+- Ship components.
+- Weapons.
+- Defensive systems.
+- Construction components.
+- Power generators.
+- Fuel processors.
+- Mining equipment.
+- Research equipment.
+
+## Crafting Rules
+
+Recipes must be defined and validated.
+
+Example:
+
+**Basic Oxygen Tank**
+- 4 Aluminum.
+- 2 Polymer.
+- 1 Oxygen Regulator.
+
+The player cannot craft this item without the necessary materials.
+
+Crafting must remove the required materials and add the output item atomically.
+
+DeepSeek can suggest new technologies and recipes, but the local rules engine must validate costs and prerequisites.
+
+Implement a searchable crafting interface with category filters.
+
+---
+
+# 11. Spacecraft — Piloting, Repair, and Upgrades
+
+The spacecraft is one of the most important parts of the game.
+
+The player should be able to walk inside it, interact with systems, repair damaged components, and pilot it.
+
+## Spacecraft Interior
+
+Include:
+- Cockpit.
+- Pilot seat.
+- Navigation console.
+- Cargo storage.
+- Life-support control.
+- Engine access.
+- Power distribution.
+- Repair console.
+- Equipment lockers.
+- Sleeping area.
+- Airlock.
+
+As ships grow larger, allow additional rooms and components.
+
+## Functional Ship Systems
+
+Model:
+- Engines.
+- Thrusters.
+- Fuel tanks.
+- Reactors.
+- Batteries.
+- Life support.
+- Shields.
+- Sensors.
+- Navigation.
+- Communications.
+- Cargo.
+- Landing gear.
+- Hull integrity.
+
+Each component has durability, repair requirements, and operational characteristics.
+
+Damage should have consequences.
+
+A damaged engine may reduce available thrust.
+
+A broken oxygen generator may force the player to consume emergency oxygen.
+
+A damaged power system may disable nonessential modules.
+
+## Flying
+
+Allow the player to:
+- Start the engines.
+- Take off.
+- Control thrust.
+- Rotate the ship.
+- Maneuver through space.
+- Approach planets.
+- Enter atmospheric flight.
+- Land on planetary surfaces.
+- Dock with stations.
+- Navigate asteroid fields.
+- Engage faster-than-light travel after unlocking it.
+
+Flight should be interactive rather than a decorative animation.
+
+Support an approachable assisted-flight mode and a more demanding manual mode.
+
+## Upgrading
+
+Allow upgrades to:
+- Engine speed.
+- Fuel efficiency.
+- Cargo capacity.
+- Hull strength.
+- Shield capacity.
+- Weapon systems.
+- Scanning range.
+- Life support.
+- Navigation.
+- Jump range.
+- Energy storage.
+
+Include visual changes where appropriate.
+
+More advanced ships should look different from the starting damaged spacecraft.
+
+Eventually allow the player to construct or acquire additional ships.
+
+---
+
+# 12. Orbital Space Stations
+
+The player should encounter a damaged or abandoned orbital station early in the game.
+
+This station becomes a persistent home and central operating hub.
+
+Initially, most of the station is nonfunctional.
+
+The player must gather resources to restore it.
+
+## Initial Repair Objectives
+
+- Restore power.
+- Repair docking systems.
+- Fix atmospheric control.
+- Restart life support.
+- Restore storage.
+- Activate communications.
+- Restore navigation.
+- Repair damaged structural sections.
+
+Once functional, the station becomes expandable.
+
+## Station Construction
+
+Allow construction of:
+- Habitat modules.
+- Storage modules.
+- Docking bays.
+- Ship repair facilities.
+- Research laboratories.
+- Manufacturing rooms.
+- Hydroponic farms.
+- Oxygen production systems.
+- Solar arrays.
+- Reactors.
+- Defensive turrets.
+- Communications arrays.
+- Observation decks.
+- Hangars.
+- Trading facilities.
+- Medical facilities.
+
+Use an actual modular 3D construction system.
+
+Modules must physically attach at compatible connection points.
+
+The station must be navigable internally where appropriate.
+
+Include power, oxygen, and structural connection requirements.
+
+## Station Management
+
+Track:
+- Power generation.
+- Power consumption.
+- Oxygen generation.
+- Storage capacity.
+- Resource production.
+- Manufacturing queues.
+- Structural integrity.
+- Docking capacity.
+- Defensive readiness.
+
+Allow station automation upgrades.
+
+The player should gradually transform a damaged outpost into a major orbital operations center.
+
+---
+
+# 13. Planetary Bases, Homes, and Settlements
+
+Allow the player to construct permanent bases on planets.
+
+Bases should provide meaningful advantages.
+
+The player should be able to create:
+- Small survival shelters.
+- Personal homes.
+- Resource extraction outposts.
+- Research facilities.
+- Industrial centers.
+- Agricultural colonies.
+- Large planetary hubs.
+
+## Construction System
+
+Include a 3D building editor.
+
+Provide:
+- Grid snapping.
+- Free placement where appropriate.
+- Rotation.
+- Placement preview.
+- Valid/invalid placement indicators.
+- Collision checks.
+- Construction cost previews.
+- Structure upgrades.
+- Demolition with configurable material recovery.
+- Interior decoration.
+
+## Building Parts
+
+Support:
+- Foundations.
+- Floors.
+- Walls.
+- Windows.
+- Doors.
+- Roofs.
+- Corridors.
+- Airlocks.
+- Stairs.
+- Platforms.
+- Support beams.
+- Landing pads.
+- Storage rooms.
+- Furniture.
+- Lighting.
+- Beds.
+- Workbenches.
+- Research stations.
+- Power equipment.
+- Oxygen generators.
+- Refiners.
+- Farming equipment.
+- Defensive equipment.
+
+Different environments require different building technologies.
+
+For example, a toxic planet requires sealed habitats.
+
+A frozen planet requires heating.
+
+A volcanic planet needs thermal protection.
+
+## Multiple Bases
+
+Allow unlimited bases subject to performance and storage constraints.
+
+Every base should have a unique ID and persistent location.
+
+Mark bases on the galaxy and planet maps.
+
+Allow the player to travel between established bases.
+
+Later technology can unlock interplanetary logistics and automated resource transfers, subject to power, capacity, transport time, and other gameplay rules.
+
+---
+
+# 14. PvE Combat and Hostile Encounters
+
+This is a **single-player PvE game**.
+
+No other human players are required.
+
+Include hostile enemies controlled by local game AI.
+
+Possible enemies:
+- Aggressive alien wildlife.
+- Territorial creatures.
+- Hostile robotic drones.
+- Automated security systems.
+- Space pirates.
+- Rogue mining machines.
+- Ancient defense systems.
+- Hostile alien spacecraft.
+
+## Ground Combat
+
+Support:
+- Melee tools.
+- Mining laser combat.
+- Energy pistols.
+- Rifles.
+- Throwable devices.
+- Defensive shields.
+- Armor upgrades.
+- Healing equipment.
+- Environmental cover.
+
+Enemies should:
+- Detect the player based on distance, visibility, and sound where appropriate.
+- Patrol.
+- Chase.
+- Attack.
+- Retreat when appropriate.
+- Defend territory.
+- React to damage.
+- Drop suitable loot upon defeat.
+
+Use finite-state machines or behavior trees for reliable local behavior.
+
+DeepSeek can generate enemy archetypes, encounter descriptions, combat objectives, and environmental modifiers.
+
+Do not call DeepSeek on every enemy movement or attack.
+
+## Space Combat
+
+Include:
+- Hostile ships.
+- Laser weapons.
+- Missiles.
+- Shield systems.
+- Hull damage.
+- Target locking.
+- Defensive maneuvers.
+- Ship repairs after combat.
+- Salvage opportunities.
+
+Difficulty should scale with the region and player progression.
+
+Allow an optional peaceful exploration setting that reduces or disables hostile encounters.
+
+Do not overwhelm new players with constant combat.
+
+---
+
+# 15. Alien Wildlife and Ecosystems
+
+DeepSeek should define alien lifeforms for newly discovered planets.
+
+Use a procedural creature-construction system.
+
+Support different body types:
+- Quadrupeds.
+- Bipeds.
+- Flying creatures.
+- Crawling creatures.
+- Aquatic organisms.
+- Insect-like animals.
+- Floating organisms.
+- Mechanical lifeforms.
+
+Creatures should be visually distinctive using reusable procedural geometry.
+
+Each creature type has:
+- Species ID.
+- Name.
+- Appearance definition.
+- Size.
+- Movement style.
+- Habitat.
+- Behavior.
+- Aggression.
+- Health.
+- Attack capabilities.
+- Resource drops.
+- Discovery information.
+
+Implement:
+- Idle movement.
+- Wandering.
+- Flocking.
+- Fleeing.
+- Hunting.
+- Sleeping.
+- Territorial behavior.
+- Group behavior.
+
+Players should be able to scan creatures and record their discoveries.
+
+Non-hostile wildlife should make planets feel alive.
+
+---
+
+# 16. Exploration, Scanning, and Discoveries
+
+Give the player a multipurpose scanner.
+
+Allow scanning:- Minerals.
+- Plants.
+- Animals.
+- Structures.
+- Shipwrecks.
+- Artifacts.
+- Atmospheric conditions.
+- Energy signatures.
+- Distress signals.
+- Underground deposits.
+
+Scanning should unlock information and improve navigation.
+
+Provide a discovery journal containing:
+- Planets explored.
+- Star systems discovered.
+- Alien species cataloged.
+- Resources identified.
+- Technology discovered.
+- Ruins investigated.
+- Missions completed.
+- Major historical discoveries.
+
+DeepSeek should generate interesting background lore for discoveries.
+
+Avoid meaningless repetitive descriptions.
+
+The game should remember previously discovered civilizations and connect future discoveries to earlier information.
+
+---
+
+# 17. AI-Generated Missions and Storylines
+
+DeepSeek should dynamically generate missions based on the current world state.
+
+Example mission types:
+
+**Survival**
+- Find oxygen supplies.
+- Repair a life-support system.
+- Locate drinkable water.
+- Recover fuel.
+- Escape dangerous weather.
+
+**Exploration**
+- Survey an unknown planet.
+- Investigate an alien signal.
+- Find a hidden cave.
+- Discover ancient ruins.
+- Map a resource deposit.
+
+**Spacecraft**
+- Repair a damaged engine.
+- Recover missing ship components.
+- Salvage an abandoned vessel.
+- Upgrade navigation equipment.
+- Restore a jump drive.
+
+**Base Building**
+- Establish a planetary outpost.
+- Construct a fuel refinery.
+- Restore a damaged space station.
+- Build an automated mining operation.
+- Expand a permanent settlement.
+
+**Combat**
+- Defend an outpost against hostile drones.
+- Escape a pirate ambush.
+- Disable a rogue security system.
+- Recover stolen equipment.
+
+**Narrative**
+- Investigate a lost expedition.
+- Decode an ancient transmission.
+- Uncover the history of an extinct civilization.
+- Locate a possible route back to Earth.
+- Discover the cause of the original spacecraft malfunction.
+
+## Mission Validation
+
+Every mission must contain:
+- Stable mission ID.
+- Title.
+- Description.
+- Objectives.
+- Required locations.
+- Completion conditions.
+- Rewards.
+- Difficulty.
+- Prerequisites.
+- Expiration conditions if applicable.
+
+The local engine must verify objectives.
+
+Do not award rewards simply because DeepSeek claims a mission is completed.
+
+Maintain a persistent mission history.
+
+Future missions should reference earlier discoveries when appropriate.
+
+---
+
+# 18. NPCs, Civilizations, and Factions
+
+The player may discover inhabited stations and alien civilizations.
+
+These should use AI-generated personalities and background lore.
+
+Support:
+- Traders.
+- Scientists.
+- Explorers.
+- Engineers.
+- Merchants.
+- Station operators.
+- Friendly aliens.
+- Hostile factions.
+
+NPCs should have persistent identities.
+
+DeepSeek can generate dialogue from the character's history, personality, faction, location, and current game events.
+
+Do not regenerate an NPC as a completely different character every time the player returns.
+
+NPC interactions may include:
+- Conversations.
+- Trade.
+- Information gathering.
+- Mission offers.
+- Repair services.
+- Equipment sales.
+- Technology exchanges.
+- Faction reputation changes.
+
+Trading transactions must be handled by the local game engine.
+
+A trader cannot sell items that do not exist in their generated inventory.
+
+Dialogue should not require a new API call for every minor interaction when reusable conversation content is already available.
+
+---
+
+# 19. Research and Technology Progression
+
+Build an extensive technology tree.
+
+Research categories should include:
+
+- Survival.
+- Suit technology.
+- Life support.
+- Mining.
+- Refining.
+- Energy.
+- Weapons.
+- Defense.
+- Spacecraft.
+- Propulsion.
+- Navigation.
+- Automation.
+- Robotics.
+- Planetary construction.
+- Station construction.
+- Agriculture.
+- Advanced alien technology.
+
+Research should require appropriate discoveries, resources, or experimental progress.
+
+Unlocks should provide actual new capabilities.
+
+Examples:
+- Improved oxygen recycling.
+- Radiation shielding.
+- Portable resource scanners.
+- Automated mining drones.
+- Advanced reactors.
+- Fuel-efficient engines.
+- Larger cargo containers.
+- Hyperdrive upgrades.
+- Planetary teleportation systems, if intentionally included as advanced technology.
+- Large orbital construction modules.
+
+DeepSeek can suggest additional technologies, but their effects must be defined by supported local gameplay mechanics.
+
+Avoid adding fictional upgrades that only change descriptive text.
+
+---
+
+# 20. Procedural Shipwrecks, Ruins, and Dungeons
+
+Create explorable locations containing structured challenges.
+
+Examples:
+- Crashed cargo ships.
+- Abandoned space stations.
+- Underground laboratories.
+- Ancient alien temples.
+- Pirate hideouts.
+- Derelict spacecraft.
+- Mining facilities.
+- Subterranean research bunkers.
+
+Each location may contain:
+- Rooms.
+- Corridors.
+- Locked doors.
+- Security systems.
+- Loot containers.
+- Hostile enemies.
+- Computer terminals.
+- Environmental hazards.
+- Repairable machinery.
+- Puzzles.
+- Hidden discoveries.
+
+Use procedural layout generators driven by validated DeepSeek specifications.
+
+Do not rely entirely on random empty rooms.
+
+Create real navigable interiors with objectives and rewards.
+
+Remember cleared enemies, opened doors, collected loot, and completed puzzles when revisiting.
+
+---
+
+# 21. Dynamic Universe Events
+
+DeepSeek should periodically generate events appropriate to the player's circumstances.
+
+Examples:
+- Solar storms.
+- Meteor showers.
+- Distress signals.
+- Pirate activity.
+- Unusual planetary weather.
+- Alien migration.
+- Resource discoveries.
+- Abandoned ship transmissions.
+- Station equipment failures.
+- New trade opportunities.
+- Scientific anomalies.
+
+Events should be generated at meaningful moments, such as:
+- Entering a new star system.
+- Landing on an unexplored planet.
+- Completing a major objective.
+- Establishing a new base.
+- Repairing an important spacecraft component.
+- Discovering rare technology.
+
+Avoid excessive AI interruptions.
+
+Offer a setting for event frequency.
+
+Use deterministic local mechanics to apply event effects.
+
+For example, DeepSeek can propose a solar storm, but the local simulation calculates power disruptions and shield damage using defined gameplay rules.
+
+---
+
+# 22. Space and Planet Travel
+
+Travel must be a genuine gameplay system.
+
+The player should be able to move between:
+- Planetary surfaces.
+- Planetary orbit.
+- Local space.
+- Other planets in a star system.
+- Neighboring star systems.
+- Space stations.
+- Asteroid belts.
+- Bases and outposts.
+
+Provide a navigation interface.
+
+Show:
+- Current location.
+- Destination.
+- Estimated travel time.
+- Required fuel.
+- Jump range.
+- Known hazards.
+- Landing conditions.
+
+For performance, use a scaled local space simulation rather than attempting physically accurate, continuously rendered astronomical distances.
+
+Planetary landing can use streaming transitions between orbital and surface representations.
+
+The transition must preserve the selected landing location and persistent terrain.
+
+Allow the player to manually fly and land.
+
+Optional autopilot should become available as a navigational upgrade.
+
+Do not make travel a simple menu teleport disguised as ship flight.
+
+---
+
+# 23. Automated Mining and Logistics
+
+As the player develops, allow industrial automation.
+
+Support:
+- Mining drills.
+- Resource extractors.
+- Refiners.
+- Power generators.
+- Storage networks.
+- Conveyor or transfer systems.
+- Automated drones.
+- Cargo transport.
+- Fuel production.
+- Station supply routes.
+
+Build a simplified but functional production simulation.
+
+For example:
+
+An extractor produces iron ore.
+
+A refinery converts ore into usable metal.
+
+A storage system receives the refined material.
+
+A fabrication machine consumes metal to produce ship components.
+
+Track actual quantities, power requirements, production rates, and storage capacity.
+
+Provide status screens showing:
+- Production per minute.
+- Available inputs.
+- Output storage.
+- Energy requirements.
+- Equipment condition.
+- Bottlenecks.
+
+Allow offline production only under explicit, balanced simulation rules.
+
+Do not create unlimited free materials simply because the browser was closed.
+
+---
+
+# 24. Player Progression and Long-Term Goals
+
+The game should offer several meaningful long-term paths.
+
+**The Survivor**
+
+Focus on repairing the ship, surviving dangerous environments, and finding a route home.
+
+**The Explorer**
+
+Discover new systems, catalog alien life, investigate mysteries, and explore strange planets.
+
+**The Engineer**
+
+Develop advanced spacecraft, automated resource systems, and large space stations.
+
+**The Colonist**
+
+Build settlements, planetary homes, and interplanetary infrastructure.
+
+**The Scientist**
+
+Research unknown technology, analyze alien artifacts, and uncover ancient civilizations.
+
+**The Defender**
+
+Upgrade combat equipment, fight hostile threats, and secure important locations.
+
+Players can pursue multiple paths simultaneously.
+
+Include an optional overarching storyline about the original disaster and the possibility of reaching home.
+
+Do not end the entire game when the main storyline is completed.
+
+Allow continued exploration, building, and development.
+
+---
+
+# 25. Game User Interface
+
+Create a clean, modern science-fiction interface.
+
+Avoid excessive menus and complicated configuration.
+
+## Primary HUD
+
+Display:
+- Health.
+- Oxygen.
+- Suit energy.
+- Fuel when piloting.
+- Equipped tool.
+- Relevant interaction prompt.
+- Current objective.
+- Compass.
+- Nearby hazard warnings.
+
+## Main Screens
+
+Include:
+
+**Inventory**
+
+Manage items, cargo, equipment, and storage.
+
+**Crafting**
+
+Create tools, equipment, structures, and ship components.
+
+**Galaxy Map**
+
+Navigate explored and unexplored space.
+
+**Planet Map**
+
+View discovered surface locations, deposits, and bases.
+
+**Missions**
+
+Track objectives and completed quests.
+
+**Research**
+
+Unlock technologies and improvements.
+
+**Build Mode**
+
+Construct bases and stations.
+
+**Ship Management**
+
+Repair, upgrade, and manage spacecraft.
+
+**Discoveries**
+
+Review scanned species, resources, locations, and lore.
+
+**Settings**
+
+Graphics, audio, controls, accessibility, DeepSeek connection, and save management.
+
+Use clear labels.
+
+Do not make the user understand technical terms such as heuristics, seed normalization, or procedural thresholds just to play.
+
+Place advanced settings in an optional drawer.
+
+---
+
+# 26. Persistent Storage — IndexedDB
+
+**This is a critical requirement.**
+
+All meaningful player progress must be saved locally.
+
+Use IndexedDB as the primary persistent database.
+
+Store:
+- Player position.
+- Player health and survival statistics.
+- Inventory.
+- Equipped items.
+- Crafted equipment.
+- Ship location.
+- Ship damage.
+- Ship upgrades.
+- Fuel.
+- Explored star systems.
+- Generated planet definitions.
+- Terrain generation seeds.
+- Terrain modifications.
+- Resource depletion.
+- Discovered species.
+- Mission status.
+- NPC identities.
+- Faction reputation.
+- Constructed bases.
+- Space station upgrades.
+- Storage inventories.
+- Automation systems.
+- Research progress.
+- AI-generated storyline history.
+- AI-generated world data.
+- Relevant generation queues.
+- Gameplay settings.
+
+## Save System
+
+Provide:
+- Automatic saving.
+- Manual saving.
+- Multiple save slots.
+- Continue Last Game.
+- New Game.
+- Save naming.
+- Save deletion.
+- Save backups.
+- Import/Export Save.
+- Corruption detection.
+- Version migration.
+
+Use transactional updates for critical state changes.
+
+Never treat an IndexedDB write as successful until its transaction has completed.
+
+Avoid overwriting a working save with incomplete or corrupted data.
+
+## Save Slot Example
+
+```json
+{
+  "save_id": "slot_001",
+  "player": {
+    "current_system": "system_alpha",
+    "current_planet": "planet_03",
+    "health": 100,
+    "oxygen": 72
+  },
+  "ship": {
+    "ship_id": "ship_001",
+    "hull_integrity": 64,
+    "fuel": 38
+  },
+  "universe": {
+    "seed": 482901,
+    "discovered_systems": 7,
+    "explored_planets": 19
+  },
+  "settlements": {
+    "planetary_bases": 3,
+    "orbital_stations": 1
+  }
+}
+```
+
+This is illustrative metadata. Store complete normalized records, not only the summarized information shown here.
+
+## Storage Architecture
+
+Use separate IndexedDB object stores for:
+- Save slots.
+- Player state.
+- Universe metadata.
+- Star systems.
+- Planets.
+- Terrain modifications.
+- World entities.
+- Inventory containers.
+- Vehicles.
+- Structures.
+- Missions.
+- NPCs.
+- Research.
+- AI-generated content.
+- Settings.
+
+Use stable IDs and indexed relationships.
+
+Avoid rewriting the entire universe whenever one inventory item changes.
+
+Use deterministic seeds to reconstruct unchanged terrain rather than saving millions of redundant vertices.
+
+Store only persistent world modifications and relevant cached assets.
+
+Use OPFS for large binary caches where it offers practical benefits.
+
+Request persistent browser storage when supported, and warn users that clearing site data may erase locally saved games.
+
+Allow portable JSON save backups, with a manifest and accompanying binary assets when needed.
+
+---
+
+# 27. DeepSeek API Configuration and Cost Control
+
+Use the actual DeepSeek API.
+
+Provide settings for:
+- API key.
+- Supported model selection.
+- Connection test.
+- Token usage.
+- Estimated generation cost.
+- Daily or session budget.
+- Generation frequency.
+- Automatic background generation.
+- Manual AI generation.
+
+Persist the API key only after the user opts to save it locally.
+
+Provide a clear warning that a browser-only application cannot completely conceal an API key from scripts running in that browser.
+
+Do not send the API key to any unrelated service.
+
+Use the actual documented API endpoint and current model identifiers.
+
+## API Cost Optimization
+
+DeepSeek should not be called continuously.
+
+Use it for meaningful generation tasks, including:
+- A new star system.
+- A new planet's creative profile.
+- A mission or major event.
+- A named NPC.
+- A civilization.
+- A major discovery.
+- A significant narrative development.
+
+The local engine should handle:
+- Movement.
+- Rendering.
+- Resource collection.
+- Inventory.
+- Crafting.
+- Collision detection.
+- Combat.
+- Physics.
+- Survival calculations.
+- Routine enemy AI.
+- Construction.
+- Production.
+- Standard interactions.
+
+Cache successful DeepSeek results.
+
+Revisit existing content without repeatedly paying for identical generation.
+
+---
+
+# 28. Structured AI Generation
+
+Use strict JSON schemas for DeepSeek responses.
+
+Do not accept unrestricted AI-generated JavaScript.
+
+Example planet generation specification:
+
+```json
+{
+  "planet_id": "planet_014",
+  "name": "Vespera",
+  "biome": "crystal_forest",
+  "gravity": 0.72,
+  "temperature_c": -12,
+  "atmosphere": {
+    "breathable": false,
+    "toxicity": 0.15
+  },
+  "terrain": {
+    "seed": 184229,
+    "mountain_density": 0.7,
+    "cave_density": 0.35,
+    "water_level": 0.15
+  },
+  "resources": [
+    {
+      "type": "titanium",
+      "abundance": 0.45
+    },
+    {
+      "type": "crystal_ore",
+      "abundance": 0.8
+    }
+  ],
+  "wildlife": [
+    {
+      "species_id": "species_201",
+      "name": "Lumina Grazer",
+      "behavior": "passive",
+      "habitat": "crystal_valleys"
+    }
+  ],
+  "discoveries": [
+    {
+      "type": "ancient_ruins",
+      "name": "The Silent Observatory"
+    }
+  ]
+}
+```
+
+The actual game must validate values and resolve references to supported assets and systems.
+
+DeepSeek specifies what the world contains.
+
+The local procedural engine determines how to construct and simulate it.
+
+When an AI response includes an unsupported object or behavior, use a documented compatible fallback and record the limitation.
+
+Never claim that arbitrary DeepSeek text automatically becomes fully detailed 3D geometry.
+
+---
+
+# 29. Background Universe Generation
+
+Generate upcoming content while the player is occupied.
+
+Examples:
+
+While the player mines resources:
+- Prepare surrounding terrain chunks.
+- Generate local ecosystem data.
+- Cache upcoming discoveries.
+
+While the player approaches a planet:
+- Prepare surface terrain.
+- Generate resource deposits.
+- Prepare wildlife definitions.
+- Generate relevant points of interest.
+
+While the player travels through space:
+- Prepare destination planet information.
+- Generate encounters.
+- Prepare missions.
+- Cache station and landing zone layouts.
+
+Use a priority queue.
+
+The currently active gameplay scene receives highest priority.
+
+Background tasks must not freeze movement or combat.
+
+If generation takes longer than expected, use deterministic procedural content that is already available or pause at an appropriate loading boundary.
+
+Do not show an ungenerated planet as though it were a finished world.
+
+Cache completed results so they are not generated repeatedly.
+
+---
+
+# 30. Graphics and Visual Design
+
+Create a polished, immersive 3D science-fiction style.
+
+Visual goals:
+- Detailed but optimized low-poly environments.
+- Attractive planetary landscapes.
+- Atmospheric lighting.
+- Dynamic shadows.
+- Day/night transitions.
+- Animated foliage.
+- Alien vegetation.
+- Glowing crystals.
+- Volcanic effects.
+- Dust storms.
+- Snow.
+- Space backgrounds.
+- Nebula-like visual effects.
+- Star fields.
+- Asteroid fields.
+- Engine exhaust.
+- Landing thrusters.
+- Spacecraft damage effects.
+- Interior station lighting.
+
+Use procedurally generated geometry rather than external paid assets.
+
+Provide visual quality settings:
+- Low.
+- Balanced.
+- High.
+- Auto.
+
+Balanced is the default.
+
+Use adaptive rendering resolution, LOD, instancing, and particle limits.
+
+Prioritize smooth gameplay on an 8 GB Chromebook.
+
+Do not make the entire planet a single enormous high-resolution mesh.
+
+---
+
+# 31. Sound and Atmosphere
+
+Use Web Audio for interactive sound.
+
+Include:
+- Spacecraft engine sounds.
+- Thrusters.
+- Landing effects.
+- Machinery.
+- Mining lasers.
+- Weapon effects.
+- Footsteps.
+- Wind.
+- Rain.
+- Storms.
+- Ambient wildlife.
+- Station alarms.
+- Equipment warnings.
+- Construction sounds.
+- Environmental ambience.
+
+Different planets should have different soundscapes.
+
+Allow separate volume controls for:
+- Master audio.
+- Music.
+- Environment.
+- Effects.
+- UI.
+
+Optional AI-generated dialogue can be added later, but the initial game must not depend on TTS to function.
+
+---
+
+# 32. Gameplay Balance
+
+Build a central balancing system.
+
+Define consistent:
+- Mining yields.
+- Crafting costs.
+- Fuel consumption.
+- Oxygen consumption.
+- Enemy damage.
+- Weapon damage.
+- Repair costs.
+- Energy production.
+- Research requirements.
+- Travel distances.
+- Production speeds.
+
+DeepSeek may introduce variation but must operate inside validated limits.
+
+The player should never be trapped in an unwinnable situation because a required repair resource is impossible to obtain.
+
+Provide emergency recovery methods and local access to essential survival resources.
+
+Progression should be rewarding.
+
+Early gameplay focuses on survival and repairs.
+
+Mid-game focuses on exploration, research, and base construction.
+
+Late-game focuses on advanced ships, interplanetary infrastructure, major discoveries, and long-term universe goals.
+
+---
+
+# 33. Reliability and Error Handling
+
+Handle:
+- DeepSeek API timeouts.
+- Invalid AI JSON.
+- Network disconnections.
+- Model errors.
+- WebGL context loss.
+- IndexedDB failures.
+- Browser storage limits.
+- Resource loading failures.
+- Missing assets.
+- Corrupted save records.
+- Procedural generation errors.
+- Out-of-memory conditions.
+- Unloaded terrain collisions.
+- Invalid crafting recipes.
+- Broken mission references.
+
+Provide useful error messages.
+
+Maintain a recovery log.
+
+Do not erase the player's existing universe due to a failed AI request.
+
+Do not let failed background generation cause the active game to crash.
+
+The game must remain playable using locally available content.
+
+---
+
+# 34. Gameplay Performance
+
+Target stable performance on ordinary Chromebooks.
+
+Use:
+- Chunk-based terrain.
+- Level-of-detail meshes.
+- Object pooling.
+- Instanced rendering.
+- Frustum culling.
+- Controlled spawn limits.
+- Asset reuse.
+- Web Workers.
+- Asynchronous chunk generation.
+- Efficient IndexedDB writes.
+- Entity activation based on proximity.
+- Resource disposal after leaving scenes.
+
+Do not simulate all creatures and machinery across the entire galaxy every frame.
+
+Use lower-frequency background simulation for inactive locations.
+
+Calculate catch-up production using bounded, deterministic rules when returning to a base.
+
+Provide optional performance diagnostics showing FPS, active entities, terrain chunks, generation queue, and memory estimates where available.
+---
+
+# 35. Development Roadmap and Feature Tracking
+
+Create a permanent master development checklist.
+
+Each feature must have:
+- Stable feature ID.
+- Description.
+- Dependencies.
+- Implementation status.
+- Test requirements.
+- Known issues.
+- User approval status.
+
+Statuses:
+- Planned.
+- In Development.
+- Implemented — Awaiting Test.
+- Tested — Awaiting User Approval.
+- Approved.
+- Broken / Needs Repair.
+
+**All newly created checklist items must be unchecked by default.**
+
+Do not mark a feature approved just because code was written or an automated test passed.
+
+Only the user's explicit approval authorizes marking a feature completed and approved.
+
+If the user reports something broken or regressed, return it to an unapproved status and record the issue.
+
+Never delete existing requirements just because a new version focuses on different features.
+
+## Suggested Milestones
+
+**Milestone 1 — Playable Foundation**
+- 3D astronaut.
+- Movement and camera.
+- Starting planet.
+- Collisions and gravity.
+- Resource collection.
+- Inventory.
+- Oxygen and health.
+- Local save/load.
+
+**Milestone 2 — Ship and Space Travel**
+- Spacecraft.
+- Interactive cockpit.
+- Piloting.
+- Takeoff and landing.
+- Fuel consumption.
+- Ship repair.
+- Star system map.
+
+**Milestone 3 — AI Universe**
+- DeepSeek integration.
+- Planet generation.
+- Star systems.
+- Discoveries.
+- Missions.
+- Persistent AI-generated content.
+
+**Milestone 4 — Building and Stations**
+- Planetary base construction.
+- Power systems.
+- Oxygen systems.
+- Storage.
+- Space station repair.
+- Station expansion.
+- Resource processing.
+
+**Milestone 5 — PvE**
+- Alien wildlife.
+- Hostile creatures.
+- Weapons.
+- Combat.
+- Enemy AI.
+- Space pirates.
+- Space combat.
+
+**Milestone 6 — Advanced Progression**
+- Research.
+- Automated mining.
+- Industrial systems.
+- Multiple ships.
+- Trading.
+- Alien civilizations.
+- Advanced space stations.
+- Interplanetary logistics.
+
+**Milestone 7 — Optimization and Polish**
+- Graphics improvements.
+- Performance.
+- Sound.
+- Interface improvements.
+- Save reliability.
+- Chromebook testing.
+
+Each milestone should result in actual playable functionality.
+
+Do not implement 100 decorative features while basic movement, inventory, or saving remains broken.
+
+---
+
+# 36. Required Testing
+
+Test the actual game, not merely the presence of buttons.
+
+Verify that:
+
+1. The astronaut can move freely across terrain.
+2. Terrain collisions work.
+3. Oxygen decreases under the correct conditions.
+4. The player can collect a resource.
+5. Collected resources actually appear in inventory.
+6. Crafting consumes the correct quantities.
+7. The spacecraft can take off and land.
+8. Fuel consumption affects ship travel.
+9. Damaged ship systems can be repaired.
+10. A new planet can be generated using DeepSeek.
+11. A generated planet can be explored.
+12. Discoveries persist.
+13. An enemy can detect and attack the player.
+14. The player can fight and defeat enemies.
+15. A planetary base can be constructed.
+16. Constructed structures remain after reloading.
+17. An orbital station can be repaired and expanded.
+18. A research upgrade unlocks an actual capability.
+19. AI-generated missions can be completed.
+20. Saving and reloading restores the same universe.
+21. Returning to a planet preserves terrain modifications.
+22. Disconnecting DeepSeek does not destroy existing gameplay.
+23. Browser refresh does not erase completed progress.
+24. Resource transactions cannot duplicate items during failed saves.
+25. Gameplay remains responsive while background generation occurs.
+
+Do not mark tests as passing without running them.
+
+Include a development diagnostics panel showing real errors and missing functionality.
+
+---
+
+# 37. Example of the Intended Experience
+
+The player starts inside their damaged spacecraft.
+
+Emergency lights flash.
+
+Oxygen levels are falling.
+
+The navigation computer identifies a nearby rocky planet.
+
+The player gathers repair materials from the damaged cargo compartment.
+
+They descend to the planet and land near a mountain valley.
+
+The player exits the spacecraft and begins exploring.
+
+They discover iron deposits and an abandoned research structure.
+
+DeepSeek generates the research station's history, environmental details, and possible mission.
+
+Inside, the player discovers a damaged reactor and an unfamiliar mineral.
+
+They recover supplies and return to the ship.
+
+Using the recovered resources, they repair the primary engines.
+
+They launch into orbit and investigate an abandoned space station.
+
+After docking, they restore electricity and oxygen production.
+
+The station becomes their first permanent home.
+
+Over time, the player:
+- Discovers new planets.
+- Explores alien caves.
+- Collects rare minerals.
+- Battles hostile creatures.
+- Repairs abandoned spacecraft.
+- Constructs planetary settlements.
+- Builds automated mining outposts.
+- Expands their orbital station.
+- Develops advanced technology.
+- Upgrades their spacecraft.
+- Travels to distant systems.
+- Encounters alien civilizations.
+- Uncovers ancient mysteries.
+
+Eventually, the player might own a large orbital station, several planetary homes, an industrial mining network, and multiple exploration ships.
+
+DeepSeek continues introducing new discoveries, missions, worlds, and mysteries based on the player's history.
+
+The universe grows organically through exploration and player decisions.
+
+Every meaningful change persists in IndexedDB.
+
+The player can close the browser, reopen the HTML application, select **Continue Game**, and return to their existing universe.
+
+---
+
+# 38. Final Development Instructions
+
+Build the actual game.
+
+Do not produce a decorative 3D prototype and claim that all of these mechanics exist.
+
+A real implementation must include:
+- Actual movement.
+- Actual terrain exploration.
+- Actual resource gathering.
+- Actual inventory transactions.
+- Actual crafting.
+- Actual spacecraft controls.
+- Actual ship damage and repairs.
+- Actual survival mechanics.
+- Actual construction.
+- Actual persistent world saving.
+- Actual DeepSeek-generated content.
+- Actual enemy AI and PvE combat.
+- Actual galaxy navigation.
+
+The developer AI should prioritize a **complete playable core gameplay loop** before expanding to advanced systems.
+
+The first playable version should already allow the player to:
+
+1. Explore a planet.
+2. Gather resources.
+3. Manage oxygen and health.
+4. Craft necessary equipment.
+5. Repair their spacecraft.
+6. Fly into space.
+7. Travel to another planet.
+8. Discover a new location.
+9. Save progress.
+10. Continue after refreshing the browser.
+
+After this loop is functional, implement the remaining systems in the development roadmap.
+
+When introducing new features, preserve all existing working mechanics and saved-game compatibility.
+
+DeepSeek must provide creativity and adaptive storytelling, while the local game engine provides reliable simulation and rules.
+
+**The final goal is a persistent, AI-driven, open-world space survival adventure in which the player begins as a stranded astronaut and can eventually become an interstellar explorer, engineer, station owner, and planetary colonist.**
+
+The universe should feel enormous, mysterious, dangerous, and alive.
+
+Every planet should offer new possibilities.
+
+Every significant discovery should matter.
+
+Every base and station should become a permanent part of the player's universe.
+
+And every game session should continue the same evolving adventure rather than beginning from scratch.
