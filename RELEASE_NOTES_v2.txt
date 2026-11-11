@@ -1,0 +1,34 @@
+STRANDED v2 — ANIMATION & GRAPHICS UPGRADE
+Date: November 11, 2026
+
+Play
+- WASD = walk
+- Hold Left Shift OR Right Shift while moving = sprint
+- Space = jump
+- V = first-person / third-person camera
+- E = interact with spacecraft / landing zone
+- F = mine or attack
+- C = crafting; I = inventory; B = build; M = navigation
+- Esc = release mouse
+
+New in v2
+- Articulated astronaut with helmet visor, suit panels and backpack
+- Animated walking, sprinting, jumping, landing and mining action
+- Acceleration/deceleration and fatigue-limited sprint; live motion display
+- Footstep dust particles, landing effects and synthesized footsteps
+- Smoother third-person camera and wider FOV when sprinting
+- Biome-specific sky, lighting, fog, plants and rocky formations
+- GPU-instanced scenery density, upgraded ship cockpit and navigation lamps
+- Animated drone rotors and pulsing engine exhaust
+- Low / Balanced / High settings under Settings
+- Same save schema and inventory/ship/world logic as previous build
+
+Notes
+- Uses Three.js from cdnjs: requires network access at least initially.
+- Save state remains in IndexedDB for the URL origin. Changing between file://
+  and GitHub Pages, or changing origins, does not transfer save state.
+  To migrate: export an old save and import it into the new build.
+- New settings do not require creating a fresh game.
+- View graphics density changes after landing again or reloading a planet.
+- JavaScript parses under Node v22; browser/Chromebook gameplay not
+  yet manually tested. See README for feature status and limitations.
